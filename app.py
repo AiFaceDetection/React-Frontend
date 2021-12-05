@@ -44,36 +44,7 @@ def api():
                 pass
 
         return resp
-	# if data:
-	# 	if os.path.exists(directory):
-	# 		shutil.rmtree(directory)
-
-	# 	if not os.path.exists(directory):
-	# 		try:
-	# 			os.mkdir(directory)
-	# 			time.sleep(1)
-	# 			result = data['data']
-	# 			b = bytes(result, 'utf-8')
-	# 			image = b[b.find(b'/9'):]
-	# 			im = Image.open(io.BytesIO(base64.b64decode(image)))
-	# 			im.save(directory+'/stranger.jpeg')
-
-	# 			if your-name.recognize_faces() == 'your-name':
-	# 				resp = 'your-name'
-	# 			else:
-	# 				resp = 'Nobody'
-	# 		except:
-	# 			pass
-	# return resp
-
-
-	
-
-
-
-
-
 
 
 if __name__ == '__main__':
-	app.run()
+	 app.run(debug=True)
