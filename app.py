@@ -29,6 +29,8 @@ app = Flask(__name__)
 CORS(app)
 
 # face identification var
+HEIGHT = 1080
+WIDTH = 1920
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 image_dir = os.path.join(BASE_DIR, "images")
@@ -40,8 +42,8 @@ face_dir = os.path.join(BASE_DIR, "face")
 @app.route('/api', methods=['POST', 'GET'])
 def api():
     data = request.get_json()
-    resp = 'undetected'
-    directory = './face'
+    resp = 'Face not detected'
+    directory = './getface'
 
     if data:
         if os.path.exists(directory):
@@ -55,21 +57,48 @@ def api():
                 b = bytes(result, 'utf-8')
                 image = b[b.find(b'/9'):]
                 im = Image.open(io.BytesIO(base64.b64decode(image)))
-                im.save(directory + '/face.png')
+                im.save(directory + '/face.jpg')
+
+                frame = cv2.imread(directory + '/face.jpg')
+                card_frame = frame[HEIGHT-int(HEIGHT//1.4):int(HEIGHT//1.4), 0+20:int(40 * WIDTH // 100)-20]
+                face_frame = frame[0+20:HEIGHT-20, int(40 * WIDTH // 100)+20: int(40 * WIDTH // 100) + WIDTH - int(40 * WIDTH // 100)-20]
+               
+                # card
+                cv2.imwrite(os.path.join(card_dir , 'card.jpg'), card_frame)
+                # face
+                cv2.imwrite(os.path.join(face_dir , 'face.jpg'), face_frame)
 
                 full_file_path = os.path.join(face_dir , 'face.jpg')
                 predictions = predict(full_file_path, model_path="trained_knn_model.clf")
-                resp = []
+                names = []
                 try:
                     for name, (top, right, bottom, left) in predictions:
-                        resp.append(name)
+                        names.append(name)
                 finally:
                     if len(resp) == 0:
-                        resp= ["Face not detected"]
+                        names= ["Face not detected"]
+
+                    resp = names[0]
             except:
                 pass
 
-    return resp[0]
+
+    return resp
+
+@app.route('/apii', methods=['POST', 'GET'])
+def apii():
+    try:
+        card_image = face_recognition.load_image_file('card/card.jpg')
+        face_image = face_recognition.load_image_file('face/face.jpg')
+
+        card_encoding = face_recognition.face_encodings(card_image)[0]
+        face_encoding = face_recognition.face_encodings(face_image)[0]
+
+        result = str(face_recognition.compare_faces([card_encoding], face_encoding))
+    except:
+        result  = "Face not detected"
+
+    return result
 
 
 def predict(X_img_path, knn_clf=None, model_path=None, distance_threshold=0.48):
@@ -105,6 +134,7 @@ def predict(X_img_path, knn_clf=None, model_path=None, distance_threshold=0.48):
         return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
     except:
         pass
+
 
 if __name__ == '__main__':
 	 app.run(debug=True)
