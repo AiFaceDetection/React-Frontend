@@ -42,19 +42,15 @@ face_dir = os.path.join(BASE_DIR, "face")
 @app.route('/api', methods=['POST', 'GET'])
 def api():
     data = request.get_json()
-
     result = data['data']
     b = bytes(result, 'utf-8')
     image = b[b.find(b'/9'):]
     img = imread(io.BytesIO(base64.b64decode(image)))
 
+    match = []
+
     try:
         predictions = predict("hi", img, model_path="trained_knn_model.clf")
-
-
-        match = []
-        faceData = {"name":[], "top":[], "bottom":[], "left":[], "right":[]}
-        i = 0
 
         for name, (top, right, bottom, left) in predictions:
             match.append(name)
