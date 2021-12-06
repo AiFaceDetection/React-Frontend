@@ -64,38 +64,55 @@ def api():
 
 
 
+@app.route('/apii', methods=['POST', 'GET'])
+def apii():
+    data = request.get_json()
+
+    result = data['data']
+    b = bytes(result, 'utf-8')
+    image = b[b.find(b'/9'):]
+    img = imread(io.BytesIO(base64.b64decode(image)))
+    
+
+    # X_face_locations = face_recognition.face_locations(img)
+    # faces_encodings = face_recognition.face_encodings(img, known_face_locations=X_face_locations)
+
+    # print(faces_encodings)
 
 
 
+    # if (len(faces_encodings) == 2):
+    #     result = face_recognition.compare_faces([faces_encodings[0]], faces_encodings[1])
+
+    # print(result)
+            
+
+    predictions = predict("hi", img, model_path="trained_knn_model.clf")
+    # k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
+    # print(predictions)
+
+    match = []
+    for name, (top, right, bottom, left) in predictions:
+        match.append(name)
+    
+    if (len(match) == 2 % match[0] == match[1]):
+        resp = "True"
+    resp = "Flase"
+    return resp
 
 
+    # try:
+    #     card_image = face_recognition.load_image_file('card/card.jpg')
+    #     face_image = face_recognition.load_image_file('face/face.jpg')
 
+    #     card_encoding = face_recognition.face_encodings(card_image)[0]
+    #     face_encoding = face_recognition.face_encodings(face_image)[0]
 
+    #     result = str(face_recognition.compare_faces([card_encoding], face_encoding))
+    # except:
+    #     result  = "Face not detecteddd"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # return result
 
 
 
@@ -168,22 +185,7 @@ def api():
     #         pass
 
 
-    return resp
-
-@app.route('/apii', methods=['POST', 'GET'])
-def apii():
-    try:
-        card_image = face_recognition.load_image_file('card/card.jpg')
-        face_image = face_recognition.load_image_file('face/face.jpg')
-
-        card_encoding = face_recognition.face_encodings(card_image)[0]
-        face_encoding = face_recognition.face_encodings(face_image)[0]
-
-        result = str(face_recognition.compare_faces([card_encoding], face_encoding))
-    except:
-        result  = "Face not detecteddd"
-
-    return result
+    # return resp
 
 
 # def predict(X_img_path,img , knn_clf=None, model_path=None, distance_threshold=0.48):
