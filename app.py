@@ -22,7 +22,7 @@ from face_recognition.face_recognition_cli import image_files_in_folder
 
 import numpy as np
 from itertools import chain
-# from imageio import imread
+from imageio import imread
 
 
 app = Flask(__name__)
@@ -84,8 +84,8 @@ def api():
                 img1 = img1.crop(card_area)
                 img2 = img2.crop(face_area)
 
-                img1.save('./card/card.jpg')
-                img2.save('./face/face.jpg')
+                # img1.save('./card/card.jpg')
+                # img2.save('./face/face.jpg')
 
                 full_file_path = './face/face.jpg'
                 predictions = predict(full_file_path, img, model_path="trained_knn_model.clf")
@@ -135,8 +135,8 @@ def predict(X_img_path,img , knn_clf=None, model_path=None, distance_threshold=0
 
 
     # Load image file and find face locations
-    X_img = face_recognition.load_image_file(X_img_path)
-    # X_img = img
+    # X_img = face_recognition.load_image_file(X_img_path)
+    X_img = img
     X_face_locations = face_recognition.face_locations(X_img)
 
     # If no faces are found in the image, return an empty result.
