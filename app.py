@@ -77,8 +77,11 @@ def apii():
     card_encoding = face_recognition.face_encodings(img1)
     face_encoding = face_recognition.face_encodings(img2)
 
-    resp = face_recognition.compare_faces([card_encoding], face_encoding)
-
+    try:
+        resp = face_recognition.compare_faces(face_encoding, card_encoding)
+    except:
+        resp = "False"
+        
     return resp
 
     # result = data['data']
