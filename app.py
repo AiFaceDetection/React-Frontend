@@ -49,13 +49,15 @@ def api():
 
     match = []
 
-    try:
-        predictions = predict("hi", img, model_path="trained_knn_model.clf")
 
-        for name, (top, right, bottom, left) in predictions:
-            match.append(name)
-    except:
+    predictions = predict("hi", img, model_path="trained_knn_model.clf")
+
+    for name, (top, right, bottom, left) in predictions:
+        match.append(name)
+
+    if (len(match) == 0):
         match.append("unknown")
+
 
     
     resp = match[0]
