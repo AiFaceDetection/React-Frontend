@@ -74,28 +74,16 @@ def apii():
     img = imread(io.BytesIO(base64.b64decode(image)))
     
 
-    # X_face_locations = face_recognition.face_locations(img)
-    # faces_encodings = face_recognition.face_encodings(img, known_face_locations=X_face_locations)
 
-    # print(faces_encodings)
-
-
-
-    # if (len(faces_encodings) == 2):
-    #     result = face_recognition.compare_faces([faces_encodings[0]], faces_encodings[1])
-
-    # print(result)
             
 
     predictions = predict("hi", img, model_path="trained_knn_model.clf")
-    # k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-    # print(predictions)
 
     match = []
     for name, (top, right, bottom, left) in predictions:
         match.append(name)
     
-    if (len(match) == 2 % match[0] == match[1]):
+    if (len(match) == 2 & match[0] == match[1]):
         resp = "True"
     resp = "Flase"
     return resp
