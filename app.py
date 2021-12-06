@@ -48,16 +48,18 @@ def api():
     image = b[b.find(b'/9'):]
     img = imread(io.BytesIO(base64.b64decode(image)))
 
+    try:
+        predictions = predict("hi", img, model_path="trained_knn_model.clf")
 
-    predictions = predict("hi", img, model_path="trained_knn_model.clf")
 
+        match = []
+        faceData = {"name":[], "top":[], "bottom":[], "left":[], "right":[]}
+        i = 0
 
-    match = []
-    faceData = {"name":[], "top":[], "bottom":[], "left":[], "right":[]}
-    i = 0
-
-    for name, (top, right, bottom, left) in predictions:
-        match.append(name)
+        for name, (top, right, bottom, left) in predictions:
+            match.append(name)
+    except:
+        match.append("unknown")
 
     
     resp = match[0]
@@ -68,6 +70,9 @@ def api():
 @app.route('/apii', methods=['POST', 'GET'])
 def apii():
     data = request.get_json()
+
+    resp = "False"
+    return resp
 
     # result = data['data']
     # b = bytes(result, 'utf-8')
