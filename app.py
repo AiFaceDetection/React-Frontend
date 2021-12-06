@@ -83,25 +83,49 @@ def apii():
     #     resp = "False"
     # return resp
 
-    match = []
+    ##################################################################################
+
+    # match = []
 
 
-    predictions = predict("hi", img, model_path="trained_knn_model.clf")
+    # predictions = predict("hi", img, model_path="trained_knn_model.clf")
 
-    for name, (top, right, bottom, left) in predictions:
-        match.append(name)
+    # for name, (top, right, bottom, left) in predictions:
+    #     match.append(name)
 
-    if (len(match) == 2):
-        if (match[0] ==  match[1]):
-            resp = "True"
-        else:
-            resp = "False"
+    # if (len(match) == 2):
+    #     if (match[0] ==  match[1]):
+    #         resp = "True"
+    #     else:
+    #         resp = "False"
 
-    else:
-        resp = "False"
+    # else:
+    #     resp = "False"
+
+    # return resp
+
+    ##################################################################################
+
+    # 1920 1080
+    img1 = img[0: 1080, 0: 960]
+    img2 = img[0: 1080, 960: 1920]
+
+    # gray0 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+    # gray1 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+
+    gray0 = img1[...,::-1].copy()
+    gray1 = img2[...,::-1].copy()
+
+    try:
+        img_encoding1 = face_recognition.face_encodings(gray0)[0]
+        img_encoding2 = face_recognition.face_encodings(gray1)[0]
+
+        result = face_recognition.compare_faces([img_encoding1], img_encoding2)
+        resp = str(result)
+    except:
+        resp = 'Face not detecteddd'
 
     return resp
-
 
     # try:
     #     card_image = face_recognition.load_image_file('card/card.jpg')
