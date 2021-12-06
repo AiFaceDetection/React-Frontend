@@ -51,7 +51,7 @@ def api():
         
         # if not os.path.exists(directory):
         try:
-            os.mkdir(directory)
+            # os.mkdir(directory)
             time.sleep(1)
             result = data['data']
             b = bytes(result, 'utf-8')
@@ -93,9 +93,10 @@ def api():
             try:
                 for name, (top, right, bottom, left) in predictions:
                     names.append(name)
-            finally:
-                if len(resp) == 0:
-                    names= ["Face not detected"]
+            except:
+                pass
+            if len(resp) == 0:
+                names= ["Face not detected"]
 
                 resp = names[0]
         except:
