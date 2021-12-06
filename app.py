@@ -16,7 +16,8 @@ from sklearn import neighbors
 import os
 import os.path
 import pickle
-from PIL import Image, ImageDraw
+from PIL import Image
+import PIL
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
 
@@ -67,6 +68,19 @@ def api():
                 cv2.imwrite(os.path.join(card_dir , 'card.jpg'), card_frame)
                 # face
                 cv2.imwrite(os.path.join(face_dir , 'face.jpg'), face_frame)
+
+
+
+                # PIL Image crop and save
+
+                # img1 = Image.open(directory + '/face.jpg')
+                # img2 = Image.open(directory + '/face.jpg')
+
+                # # img1.crop(0, 0, int(40 * WIDTH // 100), HEIGHT)
+                # # img2.crop(int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
+
+                # img1.save(os.path.join(card_dir , 'card.jpg'))
+                # img2.save(os.path.join(face_dir , 'face.jpg'))
 
                 full_file_path = os.path.join(face_dir , 'face.jpg')
                 predictions = predict(full_file_path, model_path="trained_knn_model.clf")
