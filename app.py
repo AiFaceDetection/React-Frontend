@@ -71,34 +71,36 @@ def apii():
     image = b[b.find(b'/9'):]
     img = imread(io.BytesIO(base64.b64decode(image)))
 
-    img1 = img[0: 1080, 0: 960]
-    img2 = img[0: 1080, 960: 1920]
+    # img1 = img[0: 1080, 0: 960]
+    # img2 = img[0: 1080, 960: 1920]
 
-    card_encoding = face_recognition.face_encodings(img1)
-    face_encoding = face_recognition.face_encodings(img2)
+    # card_encoding = face_recognition.face_encodings(img1)
+    # face_encoding = face_recognition.face_encodings(img2)
 
-    try:
-        resp = face_recognition.compare_faces(face_encoding, card_encoding)
-    except:
-        resp = "False"
-        
-    return resp
-
-    # result = data['data']
-    # b = bytes(result, 'utf-8')
-    # image = b[b.find(b'/9'):]
-    # imge = imread(io.BytesIO(base64.b64decode(image)))
-    
-    # predictions = predict("hi", imge, model_path="trained_knn_model.clf")
-
-    # match1 = []
-    # for name, (top, right, bottom, left) in predictions:
-    #     match1.append(name)
-    
-    # if (len(match1) == 2 & match1[0] == match1[1]):
-    #     resp = "True"
-    # resp = "Flase"
+    # try:
+    #     resp = face_recognition.compare_faces(face_encoding, card_encoding)
+    # except:
+    #     resp = "False"
     # return resp
+
+    match = []
+
+
+    predictions = predict("hi", img, model_path="trained_knn_model.clf")
+
+    for name, (top, right, bottom, left) in predictions:
+        match.append(name)
+
+    if (len(match) == 2):
+        if (match[0] ==  match[1]):
+            resp = "True"
+        else:
+            resp = "False"
+
+    else:
+        resp = "False"
+
+    return resp
 
 
     # try:
