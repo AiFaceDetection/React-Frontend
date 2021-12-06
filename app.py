@@ -84,8 +84,8 @@ def api():
                 img1 = img1.crop(card_area)
                 img2 = img2.crop(face_area)
 
-                # img1.save('./card/card.jpg')
-                # img2.save('./face/face.jpg')
+                img1.save('./card/card.jpg')
+                img2.save('./face/face.jpg')
 
                 full_file_path = './face/face.jpg'
                 predictions = predict(full_file_path, img, model_path="trained_knn_model.clf")
