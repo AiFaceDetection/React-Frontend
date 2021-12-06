@@ -22,7 +22,7 @@ from face_recognition.face_recognition_cli import image_files_in_folder
 
 import numpy as np
 from itertools import chain
-from imageio import imread
+# from imageio import imread
 
 
 app = Flask(__name__)
