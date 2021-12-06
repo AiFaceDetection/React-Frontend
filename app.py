@@ -56,8 +56,11 @@ def api():
     match = []
     faceData = {"name":[], "top":[], "bottom":[], "left":[], "right":[]}
     i = 0
-    for name, (top, right, bottom, left) in predictions:
-        match.append(name)
+    try:
+        for name, (top, right, bottom, left) in predictions:
+            match.append(name)
+    except:
+        match.append("Face not detected")
     
     resp = match[0]
     return resp
@@ -71,19 +74,15 @@ def apii():
     result = data['data']
     b = bytes(result, 'utf-8')
     image = b[b.find(b'/9'):]
-    img = imread(io.BytesIO(base64.b64decode(image)))
+    imge = imread(io.BytesIO(base64.b64decode(image)))
     
+    predictions = predict("hi", imge, model_path="trained_knn_model.clf")
 
-
-            
-
-    predictions = predict("hi", img, model_path="trained_knn_model.clf")
-
-    match = []
+    match1 = []
     for name, (top, right, bottom, left) in predictions:
-        match.append(name)
+        match1.append(name)
     
-    if (len(match) == 2 & match[0] == match[1]):
+    if (len(match1) == 2 & match1[0] == match1[1]):
         resp = "True"
     resp = "Flase"
     return resp
