@@ -17,11 +17,9 @@ import os
 import os.path
 import pickle
 from PIL import Image
-import PIL
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
 
-import cv2
 import numpy as np
 from itertools import chain
 
@@ -60,27 +58,32 @@ def api():
                 im = Image.open(io.BytesIO(base64.b64decode(image)))
                 im.save(directory + '/face.jpg')
 
-                frame = cv2.imread(directory + '/face.jpg')
-                card_frame = frame[HEIGHT-int(HEIGHT//1.4):int(HEIGHT//1.4), 0+20:int(40 * WIDTH // 100)-20]
-                face_frame = frame[0+20:HEIGHT-20, int(40 * WIDTH // 100)+20: int(40 * WIDTH // 100) + WIDTH - int(40 * WIDTH // 100)-20]
+                # frame = cv2.imread(directory + '/face.jpg')
+                # card_frame = frame[HEIGHT-int(HEIGHT//1.4):int(HEIGHT//1.4), 0+20:int(40 * WIDTH // 100)-20]
+                # face_frame = frame[0+20:HEIGHT-20, int(40 * WIDTH // 100)+20: int(40 * WIDTH // 100) + WIDTH - int(40 * WIDTH // 100)-20]
                
-                # card
-                cv2.imwrite(os.path.join(card_dir , 'card.jpg'), card_frame)
-                # face
-                cv2.imwrite(os.path.join(face_dir , 'face.jpg'), face_frame)
+                # # card
+                # cv2.imwrite(os.path.join(card_dir , 'card.jpg'), card_frame)
+                # # face
+                # cv2.imwrite(os.path.join(face_dir , 'face.jpg'), face_frame)
 
 
 
                 # PIL Image crop and save
 
-                # img1 = Image.open(directory + '/face.jpg')
-                # img2 = Image.open(directory + '/face.jpg')
+                img1 = Image.open(directory + '/face.jpg')
+                img2 = Image.open(directory + '/face.jpg')
 
-                # # img1.crop(0, 0, int(40 * WIDTH // 100), HEIGHT)
-                # # img2.crop(int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
+                # img1.crop(0, 0, int(40 * WIDTH // 100), HEIGHT)
+                # img2.crop(int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
 
-                # img1.save(os.path.join(card_dir , 'card.jpg'))
-                # img2.save(os.path.join(face_dir , 'face.jpg'))
+                card_area = (0, 0, int(40 * WIDTH // 100), HEIGHT)
+                face_area = (int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
+                img1 = img1.crop(card_area)
+                img2 = img2.crop(face_area)
+
+                img1.save(os.path.join(card_dir , 'card.jpg'))
+                img2.save(os.path.join(face_dir , 'face.jpg'))
 
                 full_file_path = os.path.join(face_dir , 'face.jpg')
                 predictions = predict(full_file_path, model_path="trained_knn_model.clf")
