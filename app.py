@@ -58,8 +58,6 @@ def api():
     if (len(match) == 0):
         match.append("unknown")
 
-
-    
     resp = match[0]
     return resp
 
@@ -68,8 +66,19 @@ def api():
 @app.route('/apii', methods=['POST', 'GET'])
 def apii():
     data = request.get_json()
+    result = data['data']
+    b = bytes(result, 'utf-8')
+    image = b[b.find(b'/9'):]
+    img = imread(io.BytesIO(base64.b64decode(image)))
 
-    resp = "False"
+    img1 = img[0: 1080, 0: 700]
+    img2 = img[0: 1080, 700: 1920]
+
+    card_encoding = face_recognition.face_encodings(img1)[0]
+    face_encoding = face_recognition.face_encodings(img2)[0]
+
+    resp = str(face_recognition.compare_faces([card_encoding], face_encoding))
+
     return resp
 
     # result = data['data']
