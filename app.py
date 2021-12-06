@@ -96,7 +96,7 @@ def apii():
 
         result = str(face_recognition.compare_faces([card_encoding], face_encoding))
     except:
-        result  = "Face not detected"
+        result  = "Face not detecteddd"
 
     return result
 
