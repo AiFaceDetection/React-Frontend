@@ -50,17 +50,15 @@ def api():
 
 
     predictions = predict("hi", img, model_path="trained_knn_model.clf")
-    # k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-    # print(predictions)
+
 
     match = []
     faceData = {"name":[], "top":[], "bottom":[], "left":[], "right":[]}
     i = 0
-    try:
-        for name, (top, right, bottom, left) in predictions:
-            match.append(name)
-    except:
-        match.append("Face not detected")
+
+    for name, (top, right, bottom, left) in predictions:
+        match.append(name)
+
     
     resp = match[0]
     return resp
@@ -71,21 +69,21 @@ def api():
 def apii():
     data = request.get_json()
 
-    result = data['data']
-    b = bytes(result, 'utf-8')
-    image = b[b.find(b'/9'):]
-    imge = imread(io.BytesIO(base64.b64decode(image)))
+    # result = data['data']
+    # b = bytes(result, 'utf-8')
+    # image = b[b.find(b'/9'):]
+    # imge = imread(io.BytesIO(base64.b64decode(image)))
     
-    predictions = predict("hi", imge, model_path="trained_knn_model.clf")
+    # predictions = predict("hi", imge, model_path="trained_knn_model.clf")
 
-    match1 = []
-    for name, (top, right, bottom, left) in predictions:
-        match1.append(name)
+    # match1 = []
+    # for name, (top, right, bottom, left) in predictions:
+    #     match1.append(name)
     
-    if (len(match1) == 2 & match1[0] == match1[1]):
-        resp = "True"
-    resp = "Flase"
-    return resp
+    # if (len(match1) == 2 & match1[0] == match1[1]):
+    #     resp = "True"
+    # resp = "Flase"
+    # return resp
 
 
     # try:
