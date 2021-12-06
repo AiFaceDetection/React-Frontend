@@ -49,57 +49,57 @@ def api():
         if os.path.exists(directory):
             shutil.rmtree(directory)
         
-        if not os.path.exists(directory):
+        # if not os.path.exists(directory):
+        try:
+            os.mkdir(directory)
+            time.sleep(1)
+            result = data['data']
+            b = bytes(result, 'utf-8')
+            image = b[b.find(b'/9'):]
+            img = imread(io.BytesIO(base64.b64decode(image)))
+            im = Image.open(io.BytesIO(base64.b64decode(image)))
+            im.save(directory + '/face.jpg')
+
+            # frame = cv2.imread(directory + '/face.jpg')
+            # card_frame = frame[HEIGHT-int(HEIGHT//1.4):int(HEIGHT//1.4), 0+20:int(40 * WIDTH // 100)-20]
+            # face_frame = frame[0+20:HEIGHT-20, int(40 * WIDTH // 100)+20: int(40 * WIDTH // 100) + WIDTH - int(40 * WIDTH // 100)-20]
+            
+            # # card
+            # cv2.imwrite(os.path.join(card_dir , 'card.jpg'), card_frame)
+            # # face
+            # cv2.imwrite(os.path.join(face_dir , 'face.jpg'), face_frame)
+
+
+
+            # PIL Image crop and save
+
+            img1 = Image.open(directory + '/face.jpg')
+            img2 = Image.open(directory + '/face.jpg')
+
+            # img1.crop(0, 0, int(40 * WIDTH // 100), HEIGHT)
+            # img2.crop(int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
+
+            card_area = (0, 0, int(40 * WIDTH // 100), HEIGHT)
+            face_area = (int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
+            img1 = img1.crop(card_area)
+            img2 = img2.crop(face_area)
+
+            img1.save('./card/card.jpg')
+            img2.save('./face/face.jpg')
+
+            full_file_path = './face/face.jpg'
+            predictions = predict(full_file_path, img, model_path="trained_knn_model.clf")
+            names = []
             try:
-                os.mkdir(directory)
-                time.sleep(1)
-                result = data['data']
-                b = bytes(result, 'utf-8')
-                image = b[b.find(b'/9'):]
-                img = imread(io.BytesIO(base64.b64decode(image)))
-                im = Image.open(io.BytesIO(base64.b64decode(image)))
-                im.save(directory + '/face.jpg')
+                for name, (top, right, bottom, left) in predictions:
+                    names.append(name)
+            finally:
+                if len(resp) == 0:
+                    names= ["Face not detected"]
 
-                # frame = cv2.imread(directory + '/face.jpg')
-                # card_frame = frame[HEIGHT-int(HEIGHT//1.4):int(HEIGHT//1.4), 0+20:int(40 * WIDTH // 100)-20]
-                # face_frame = frame[0+20:HEIGHT-20, int(40 * WIDTH // 100)+20: int(40 * WIDTH // 100) + WIDTH - int(40 * WIDTH // 100)-20]
-               
-                # # card
-                # cv2.imwrite(os.path.join(card_dir , 'card.jpg'), card_frame)
-                # # face
-                # cv2.imwrite(os.path.join(face_dir , 'face.jpg'), face_frame)
-
-
-
-                # PIL Image crop and save
-
-                img1 = Image.open(directory + '/face.jpg')
-                img2 = Image.open(directory + '/face.jpg')
-
-                # img1.crop(0, 0, int(40 * WIDTH // 100), HEIGHT)
-                # img2.crop(int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
-
-                card_area = (0, 0, int(40 * WIDTH // 100), HEIGHT)
-                face_area = (int(40 * WIDTH // 100), 0, WIDTH, HEIGHT)
-                img1 = img1.crop(card_area)
-                img2 = img2.crop(face_area)
-
-                img1.save('./card/card.jpg')
-                img2.save('./face/face.jpg')
-
-                full_file_path = './face/face.jpg'
-                predictions = predict(full_file_path, img, model_path="trained_knn_model.clf")
-                names = []
-                try:
-                    for name, (top, right, bottom, left) in predictions:
-                        names.append(name)
-                finally:
-                    if len(resp) == 0:
-                        names= ["Face not detected"]
-
-                    resp = names[0]
-            except:
-                pass
+                resp = names[0]
+        except:
+            pass
 
 
     return resp
